@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GithubSearch</string>
+    <string name="til_hint_search_for_user">Search for user</string>
+    <string name="tv_text_github_search">GitHub Search</string>
+</resources>
