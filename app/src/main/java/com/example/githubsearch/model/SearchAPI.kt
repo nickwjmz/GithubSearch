@@ -7,14 +7,22 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface SearchAPI {
-    // Get repos ordered by stars.
+
+    // Get users ordered by ID
     @GET("search/users")
     fun searchUsers(
         @Query("q") query: String
     ): Call<UsersResponse>
+
+    // Get single users public info
+    @GET("users/{user}")
+    fun showUser(
+        @Path("user") user: String
+    ): Call<SingleUserResponse>
 
     companion object {
         private const val BASE_URL = "https://api.github.com/"

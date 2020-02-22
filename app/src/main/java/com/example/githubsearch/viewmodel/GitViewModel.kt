@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.githubsearch.model.Item
 import com.example.githubsearch.model.SearchAPI
 import com.example.githubsearch.model.SearchAPI.Companion.create
+import com.example.githubsearch.model.SingleUserResponse
 import com.example.githubsearch.model.UsersResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,9 +20,15 @@ private const val TAG = "searchUsers"
 class GitViewModel : ViewModel() {
 
     val dataUserList = MutableLiveData<List<Item>>()
-
     fun getDataUserList(): LiveData<List<Item>> = dataUserList
 
+/*
+    Todo: Implement Repo Count in Recycler View
+    val dataUserInfo = MutableLiveData<SingleUserResponse>()
+    fun getDataUserInfo(): LiveData<SingleUserResponse> {
+    }
+*/
+    // Populates Recyclerview with List of users matching query
     fun searchUsers(service: SearchAPI, query: String) {
         Log.d(TAG, "query: $query")
         service.searchUsers(query).enqueue(
@@ -39,4 +46,25 @@ class GitViewModel : ViewModel() {
             }
         )
     }
+
+/*
+    fun getUser(service: SearchAPI, login: String) {
+        Log.d(TAG, "login: $login")
+        service.showUser(login).enqueue(
+            object: Callback<SingleUserResponse> {
+                override fun onFailure(call: Call<SingleUserResponse>, t: Throwable) {
+                    t.printStackTrace()
+                }
+                override fun onResponse(
+                    call: Call<SingleUserResponse>,
+                    response: Response<SingleUserResponse>
+                ) {
+                    Log.e(TAG, "Got a response: $response")
+                    dataUserInfo.value = response.body()
+                }
+
+            }
+        )
+    }
+*/
 }

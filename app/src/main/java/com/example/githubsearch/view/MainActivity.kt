@@ -18,6 +18,7 @@ import com.example.githubsearch.model.UsersResponse
 import com.example.githubsearch.viewmodel.GitViewModel
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.search_item_layout.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                 if (!editTextSearch.text.isNullOrEmpty()) {
                     showLogo(s.isNullOrEmpty())
                     gitViewModel.searchUsers(create(), s.toString())
+                    //gitViewModel.getUser(create(), tv_text_repo_count.toString())
                 } else {
                     showLogo(s.isNullOrEmpty())
                 }
