@@ -6,46 +6,62 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubsearch.R
 import com.example.githubsearch.model.Item
-import com.example.githubsearch.model.SearchAPI.Companion.create
-import com.example.githubsearch.model.SingleUserResponse
-import com.example.githubsearch.model.UsersResponse
+import com.example.githubsearch.viewmodel.OpenUserDetails
+
 import com.squareup.picasso.Picasso
 
-class GitAdapter(val dataSet: List<Item>) :
-    RecyclerView.Adapter<GitAdapter.GitViewHolder>() {
+class GitAdapter(val dataSet: List<Item>,
+                 val listener: OpenUserDetails
+) : RecyclerView.Adapter<GitAdapter.GitViewHolder>() {
 
-    //val singleUser = MutableLiveData<SingleUserResponse>()
+    private val TAG = "GitAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            : GitViewHolder =
-        GitViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(
+            = GitViewHolder(
+                LayoutInflater.from(parent.context).inflate(
                     R.layout.search_item_layout,
                     parent,
-                    false)
-        )
+                    false))
 
-    override fun getItemCount(): Int = dataSet.size
+    override fun getItemCount() = dataSet.size
 
     override fun onBindViewHolder(holder: GitViewHolder, position: Int) {
-       // Todo: Implement RepoCount API call.
-       // val tvRepoCount: TextView = itemView.findViewById(R.id.tv_text_repo_count)
-
+        Log.d(TAG, "onBindViewHolder: called.")
         holder.onBind(dataSet[position])
+        holder.viewGroup.setOnClickListener {
+            listener.openUser(dataSet[position].login)
+        }
     }
 
     class GitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivAvatar: ImageView = itemView.findViewById(R.id.iv_user_avatar)
         val tvUsername: TextView = itemView.findViewById(R.id.tv_text_username)
+        val tvRepoCount: TextView = itemView.findViewById(R.id.tv_text_repo_count)
+        val viewGroup: ViewGroup = itemView.findViewById(R.id.user_list_item)
 
-        fun onBind(data : Item){
+        fun onBind(data: Item) {
             tvUsername.text = data.login
+            tvRepoCount.text = data.repos_url
             Picasso.get().load(data.avatar_url).into(ivAvatar)
         }
+        /*
+        fun onBindRepos(data: SingleUserResponse) {
+            tvRepoCount.text = data.public_repos.toString()
+        }*/
     }
+
+/*
+    companion object {
+        private val USER_COMPARATOR = object : DiffUtil.ItemCallback<Item>() {
+            override fun areItemsTheSame(oldItem: Item, newItem: Item) : Boolean =
+                oldItem.login == newItem.login
+            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean =
+                oldItem == newItem
+        }
+    }
+
+ */
 }

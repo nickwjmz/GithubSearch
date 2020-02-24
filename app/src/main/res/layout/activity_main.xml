@@ -75,17 +75,17 @@
         android:src="@drawable/github_logo_64px"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="#24292E"
         android:id="@+id/recycler_view"
-        android:visibility="invisible"
-        android:layout_height="0dp"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#24292E"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cv_github_search"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/search_item_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

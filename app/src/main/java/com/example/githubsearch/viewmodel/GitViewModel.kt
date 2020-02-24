@@ -6,11 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.example.githubsearch.model.Item
-import com.example.githubsearch.model.SearchAPI
+import com.example.githubsearch.model.*
 import com.example.githubsearch.model.SearchAPI.Companion.create
-import com.example.githubsearch.model.SingleUserResponse
-import com.example.githubsearch.model.UsersResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,12 +19,17 @@ class GitViewModel : ViewModel() {
     val dataUserList = MutableLiveData<List<Item>>()
     fun getDataUserList(): LiveData<List<Item>> = dataUserList
 
-/*
-    Todo: Implement Repo Count in Recycler View
-    val dataUserInfo = MutableLiveData<SingleUserResponse>()
-    fun getDataUserInfo(): LiveData<SingleUserResponse> {
+    fun getEmptyList(): Array<Any> {
+        val emptyArray: Array<Any> = emptyArray<Any>()
+        return emptyArray
     }
-*/
+
+    val dataUserInfo = MutableLiveData<SingleUserResponse>()
+    fun getDataUserInfo(): LiveData<SingleUserResponse> = dataUserInfo
+
+    val dataUserRepos = MutableLiveData<List<Repo>>()
+    fun getDataUserRepos(): LiveData<List<Repo>> = dataUserRepos
+
     // Populates Recyclerview with List of users matching query
     fun searchUsers(service: SearchAPI, query: String) {
         Log.d(TAG, "query: $query")
@@ -47,7 +49,6 @@ class GitViewModel : ViewModel() {
         )
     }
 
-/*
     fun getUser(service: SearchAPI, login: String) {
         Log.d(TAG, "login: $login")
         service.showUser(login).enqueue(
@@ -62,9 +63,27 @@ class GitViewModel : ViewModel() {
                     Log.e(TAG, "Got a response: $response")
                     dataUserInfo.value = response.body()
                 }
-
             }
         )
     }
-*/
+
+    fun searchUsersRepos(service: SearchAPI, login: String, query: String) {
+        Log.d(TAG, "login: $login, query: $query")
+        service.searchUserRepos(query,login).enqueue(
+            object : Callback<UserRepoResponse> {
+                override fun onFailure(call: Call<UserRepoResponse>, t: Throwable) {
+                    Log.d(TAG, "Failed to get RepoResponse")
+                    t.printStackTrace()
+                }
+                override fun onResponse(
+                    call: Call<UserRepoResponse>,
+                    response: Response<UserRepoResponse>
+                ) {
+                    Log.d(TAG, "Got a RepoResponse: $response")
+                    dataUserRepos.value = response.body()?.items
+                }
+            }
+        )
+    }
+
 }
