@@ -28,11 +28,16 @@ interface SearchAPI {
 
     // Search a users public Repos
     // https://api.github.com/search/repositories?q=g+user:chenwa
-    @GET("search/repositories?+user:{username}")
+    @GET("search/repositories")
     fun searchUserRepos(
-        @Query("q") query: String,
-        @Path("username") username: String
+        @Query("q", encoded = true) query: String
     ): Call<UserRepoResponse>
+
+    // Return Users Public Repos
+    @GET("users/{user}/repos")
+    fun showUserRepos(
+        @Path("user") user: String
+    ): Call<List<RepoResponse>>
 
     companion object {
         private const val BASE_URL = "https://api.github.com/"

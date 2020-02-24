@@ -30,6 +30,9 @@ class GitViewModel : ViewModel() {
     val dataUserRepos = MutableLiveData<List<Repo>>()
     fun getDataUserRepos(): LiveData<List<Repo>> = dataUserRepos
 
+    val dataShowRepos = MutableLiveData<List<RepoResponse>>()
+    fun getDataShowRepos(): LiveData<List<RepoResponse>> = dataShowRepos
+
     // Populates Recyclerview with List of users matching query
     fun searchUsers(service: SearchAPI, query: String) {
         Log.d(TAG, "query: $query")
@@ -42,7 +45,7 @@ class GitViewModel : ViewModel() {
                     call: Call<UsersResponse>,
                     response: Response<UsersResponse>
                 ) {
-                    Log.d(TAG, "Got a response: $response")
+                    Log.d(TAG, "Got a response for searchUsers: $response")
                     dataUserList.value = response.body()!!.items
                 }
             }
@@ -60,16 +63,16 @@ class GitViewModel : ViewModel() {
                     call: Call<SingleUserResponse>,
                     response: Response<SingleUserResponse>
                 ) {
-                    Log.e(TAG, "Got a response: $response")
+                    Log.e(TAG, "Got a response for : $response")
                     dataUserInfo.value = response.body()
                 }
             }
         )
     }
 
-    fun searchUsersRepos(service: SearchAPI, login: String, query: String) {
-        Log.d(TAG, "login: $login, query: $query")
-        service.searchUserRepos(query,login).enqueue(
+    fun searchUsersRepos(service: SearchAPI, query: String) {
+        Log.d(TAG, "query: $query")
+        service.searchUserRepos(query).enqueue(
             object : Callback<UserRepoResponse> {
                 override fun onFailure(call: Call<UserRepoResponse>, t: Throwable) {
                     Log.d(TAG, "Failed to get RepoResponse")
@@ -79,8 +82,26 @@ class GitViewModel : ViewModel() {
                     call: Call<UserRepoResponse>,
                     response: Response<UserRepoResponse>
                 ) {
-                    Log.d(TAG, "Got a RepoResponse: $response")
+                    Log.d(TAG, "Got a RepoResponse and its for searchUserRepos: $response")
                     dataUserRepos.value = response.body()?.items
+                }
+            }
+        )
+    }
+
+    fun showUserRepoList(service: SearchAPI, login: String) {
+        Log.d(TAG, "Return List of User Repos: login = $login")
+        service.showUserRepos(login).enqueue(
+            object : Callback<List<RepoResponse>> {
+                override fun onFailure(call: Call<List<RepoResponse>>, t: Throwable) {
+                    t.printStackTrace()
+                }
+                override fun onResponse(
+                    call: Call<List<RepoResponse>>,
+                    response: Response<List<RepoResponse>>
+                ) {
+                    Log.d(TAG, "SHOW ME THAT REPO LIST!!!!!!!!!!!")
+                    dataShowRepos.value = response.body()
                 }
             }
         )
