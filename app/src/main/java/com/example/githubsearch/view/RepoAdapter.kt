@@ -1,5 +1,8 @@
 package com.example.githubsearch.view
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +13,8 @@ import com.example.githubsearch.R
 import com.example.githubsearch.model.Repo
 import com.example.githubsearch.model.RepoResponse
 
-class RepoAdapter(val data: List<Repo>) :
+class RepoAdapter(val data: List<Repo>,
+                  val context: Context) :
     RecyclerView.Adapter<RepoAdapter.RepoViewHolder>() {
 
     private val TAG = "RepoAdapter"
@@ -28,6 +32,11 @@ class RepoAdapter(val data: List<Repo>) :
     override fun onBindViewHolder(holder: RepoViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder: called")
         holder.onBind(data[position])
+        holder.itemView.setOnClickListener{
+            val openURL = Intent(Intent.ACTION_VIEW)
+            openURL.data = Uri.parse(data[position].html_url)
+            context.startActivity(openURL)
+        }
     }
 
     class RepoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -89,7 +89,7 @@ class DetailedActivity: AppCompatActivity() {
         gitViewModel.getDataShowRepos()
             .observe(this@DetailedActivity, Observer<List<RepoResponse>> { t ->
                 repo_recycler_view.layoutManager = LinearLayoutManager(this@DetailedActivity)
-                repo_recycler_view.adapter = AllAdapter(t)
+                repo_recycler_view.adapter = AllAdapter(t, this)
             })
         gitViewModel.showUserRepoList(create(), tv_username.text.toString())
         val editTextRepoSearch: TextInputEditText = findViewById(R.id.tiet_repo_search)
@@ -98,11 +98,10 @@ class DetailedActivity: AppCompatActivity() {
         editTextRepoSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!editTextRepoSearch.text.isNullOrEmpty()) {
-                    repo_recycler_view.adapter?.notifyDataSetChanged()
                     gitViewModel.getDataUserRepos().observe(
                         this@DetailedActivity, Observer<List<Repo>> { t ->
                             repo_recycler_view.layoutManager = LinearLayoutManager(this@DetailedActivity)
-                            repo_recycler_view.adapter = RepoAdapter(t)
+                            repo_recycler_view.adapter = RepoAdapter(t, this@DetailedActivity)
                         }
                     )
                     gitViewModel.searchUsersRepos(create(), s.toString()+"+user:"+tv_username.text.toString())
